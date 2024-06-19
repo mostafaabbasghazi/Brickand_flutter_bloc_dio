@@ -33,12 +33,12 @@ class _HomeState extends State<Home> {
       
       controller: searchController,
       cursorColor: MyColors.myGrey,
-    decoration: InputDecoration(
+    decoration:const InputDecoration(
       fillColor: MyColors.myGrey,
       hintText: "Find A Animie Charcter",
       hintStyle: TextStyle(color: MyColors.myGrey,fontSize: 28)
     ),
-    style:TextStyle(color: MyColors.myGrey,fontSize: 28) ,
+    style:const TextStyle(color: MyColors.myGrey,fontSize: 28) ,
     onChanged: (value){
       onChangeFunction(value);
     },
@@ -114,9 +114,11 @@ class _HomeState extends State<Home> {
   Widget listPersons(){
     return GridView.builder(
       shrinkWrap: true,
-      physics: ClampingScrollPhysics(),
+      physics:const ClampingScrollPhysics(),
       itemCount:searchController.text.isEmpty? persons?.length:searchPersons!.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 2/3,crossAxisSpacing: 1,mainAxisSpacing: 1),
+      gridDelegate:const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,childAspectRatio: 2/3,
+        crossAxisSpacing: 1,mainAxisSpacing: 1),
        itemBuilder: (contex,index){
         return ItemPerson(personModel:searchController.text.isEmpty?persons![index]:searchPersons![index] ,);
        });

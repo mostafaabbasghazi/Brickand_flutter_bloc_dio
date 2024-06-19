@@ -1,4 +1,5 @@
 import 'package:bolc_persons/consts/colors.dart';
+import 'package:bolc_persons/consts/routs_name.dart';
 import 'package:bolc_persons/data/models/persons.dart';
 import 'package:flutter/material.dart';
 
@@ -17,22 +18,30 @@ class ItemPerson extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
 
       ),
-      child: GridTile(
-        child: Container(
-          color: MyColors.myYellow,
-          child:personModel.image!.isNotEmpty?FadeInImage.assetNetwork(
-            width: double.infinity,
-            height: double.infinity,
-            placeholder: 'assets/loading.gif',
-             image: personModel.image.toString()):Image.asset("assets/loading.gif")),
-            footer: Container(
-              width: double.infinity,
-              padding:const EdgeInsets.symmetric(vertical: 10,horizontal: 15),
-              color: Colors.black54,
-              alignment: Alignment.bottomCenter,
-              child: Text(personModel.name.toString(),style: TextStyle(height: 1.3,fontSize: 16,color: MyColors.myWhite,fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
-            ),
-             ),
+      child: InkWell(
+        onTap: (){
+          Navigator.pushNamed(context, AppRoutName.deatails,arguments: personModel);
+        },
+        child: GridTile(
+          child: Hero(
+            tag: personModel,
+            child: Container(
+              color: MyColors.myYellow,
+              child:personModel.image!.isNotEmpty?FadeInImage.assetNetwork(
+                width: double.infinity,
+                height: double.infinity,
+                placeholder: 'assets/loading.gif',
+                 image: personModel.image.toString()):Image.asset("assets/loading.gif")),
+          ),
+              footer: Container(
+                width: double.infinity,
+                padding:const EdgeInsets.symmetric(vertical: 10,horizontal: 15),
+                color: Colors.black54,
+                alignment: Alignment.bottomCenter,
+                child: Text(personModel.name.toString(),style: TextStyle(height: 1.3,fontSize: 16,color: MyColors.myWhite,fontWeight: FontWeight.bold),overflow: TextOverflow.ellipsis,),
+              ),
+               ),
+      ),
     );
   }
 }
