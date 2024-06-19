@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:bolc_persons/bussines_logic/cubit/person/persons_cubit.dart';
 import 'package:bolc_persons/consts/colors.dart';
 import 'package:bolc_persons/data/models/persons.dart';
@@ -15,12 +17,73 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   List<PersonModel>?persons;
+  List<PersonModel>?searchPersons;
+  bool isLoad=false;
+  TextEditingController searchController=TextEditingController();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    persons=BlocProvider.of<PersonsCubit>(context).getAllPersons();
+    BlocProvider.of<PersonsCubit>(context).getAllPersons();
+  }
+
+  Widget searchFiled(){
+    return TextField(
+      
+      controller: searchController,
+      cursorColor: MyColors.myGrey,
+    decoration: InputDecoration(
+      fillColor: MyColors.myGrey,
+      hintText: "Find A Animie Charcter",
+      hintStyle: TextStyle(color: MyColors.myGrey,fontSize: 28)
+    ),
+    style:TextStyle(color: MyColors.myGrey,fontSize: 28) ,
+    onChanged: (value){
+      onChangeFunction(value);
+    },
+    );
+  }
+
+  onChangeFunction(String value){
+    searchPersons=persons?.where((element)=>element.name!.contains(value)).toList();
+    setState(() {
+      
+    });
+  }
+
+  List<Widget> appBarItems(){
+    if(isLoad){
+      return [
+      IconButton(onPressed: (){
+        clearController();
+        Navigator.pop(context);
+      },icon: Icon(Icons.clear,color: MyColors.myGrey,),)
+    ];
+    }else{
+      return [
+      IconButton(onPressed: goToSearch,icon: Icon(Icons.search,color: MyColors.myGrey,),)
+    ];
+    }
+  }
+  void goToSearch(){
+    ModalRoute.of(context)!.addLocalHistoryEntry(LocalHistoryEntry(onRemove:backFromSearch ));
+    setState(() {
+      isLoad=true;
+    });
+  }
+
+  void backFromSearch(){
+    clearController();
+    setState(() {
+      isLoad=false;
+    });
+  }
+
+  void clearController(){
+    setState(() {
+      searchController.clear();
+    });
   }
 
   Widget biuldBlocBiulder(){
@@ -52,18 +115,29 @@ class _HomeState extends State<Home> {
     return GridView.builder(
       shrinkWrap: true,
       physics: ClampingScrollPhysics(),
-      itemCount: persons?.length,
+      itemCount:searchController.text.isEmpty? persons?.length:searchPersons!.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 2/3,crossAxisSpacing: 1,mainAxisSpacing: 1),
        itemBuilder: (contex,index){
-        return ItemPerson(personModel:persons![index] ,);
+        return ItemPerson(personModel:searchController.text.isEmpty?persons![index]:searchPersons![index] ,);
        });
+  }
+
+  Widget appBarTitle(){
+    return  Text("Persons",style: TextStyle(fontSize: 28,color: MyColors.myGrey),);
   }
   
   @override
   Widget build(BuildContext context) {
     
     return Scaffold(
-      appBar: AppBar(title: Text("Persons",style: TextStyle(fontSize: 28,color: MyColors.myWhite),),centerTitle: true,backgroundColor: MyColors.myGrey,),
+      appBar: AppBar(
+        backgroundColor: MyColors.myYellow,
+        leading: isLoad?BackButton(color: MyColors.myGrey,):Container(),
+        title:isLoad?searchFiled():appBarTitle(),
+      actions: 
+        appBarItems()
+      ,
+      ),
       body: biuldBlocBiulder(),
     );
   }
