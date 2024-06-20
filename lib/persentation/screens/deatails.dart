@@ -1,3 +1,4 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:bolc_persons/consts/colors.dart';
 import 'package:bolc_persons/data/models/persons.dart';
 import 'package:flutter/material.dart';
@@ -72,7 +73,34 @@ class Deatails extends StatelessWidget {
                     SizedBox(height: 20,),
                     biuldPersonInfo("created : ",personModel.created.toString()),
                     biuldDivider(12),
-                    SizedBox(height: 600,)
+                     SizedBox(
+  width: double.infinity,
+  height: 400,
+  child: DefaultTextStyle(
+    style: const TextStyle(
+      fontSize: 35,
+      color: Colors.white,
+      shadows: [
+        Shadow(
+          blurRadius: 7.0,
+          color: Colors.white,
+          offset: Offset(0, 0),
+        ),
+      ],
+    ),
+    child: AnimatedTextKit(
+      repeatForever: true,
+      animatedTexts: [
+        FlickerAnimatedText('Hello I am ${personModel.name.toString()}'),
+        FlickerAnimatedText('My gender is ${personModel.gender.toString()}'),
+        FlickerAnimatedText("C'est La Vie !"),
+      ],
+      onTap: () {
+        print("Tap Event");
+      },
+    ),
+  ),
+)
                   ],
                 ),
               )
